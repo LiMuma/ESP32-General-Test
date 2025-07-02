@@ -16,7 +16,6 @@
 U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE, /* clock=*/ SCL_PIN, /* data=*/ SDA_PIN);
 
 void initScreen() {
-  Serial.begin(115200);
   Serial.println("Initializing OLED Display...");
   
   // 初始化U8g2显示屏

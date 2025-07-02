@@ -7,6 +7,8 @@
 #define I2S_BCK 13
 #define I2S_LRC 12
 
+void showUTF8Status(const char* title, const char* message);
+
 void playSineTone(float frequency, int duration_ms) {
   const int amplitude = 3000;
   const int samples = I2S_SAMPLE_RATE * duration_ms / 1000;
@@ -23,6 +25,9 @@ void playSineTone(float frequency, int duration_ms) {
 }
 
 void initAudio() {
+  Serial.println("Audio module initialization...");
+  showUTF8Status("Audio:", "初始化中...");
+  
   const i2s_config_t i2s_config = {
     .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_TX),
     .sample_rate = 44100,
@@ -47,16 +52,18 @@ void initAudio() {
   i2s_set_pin(I2S_NUM_0, &pin_config);
   
   playSineTone(440.0, 2000); // Play a 440 Hz sine tone for 2 seconds
+  
+  Serial.println("Audio module initialized (placeholder)");
+  showUTF8Status("Audio:", "初始化完成");
 }
+
 void playAudio() {
-  // put your main code here, to run repeatedly:
-  delay(1000); // Delay for 1 second
-  playSineTone(261.63, 2000); // Play a 440 Hz sine tone for 2 seconds
-  playSineTone(293.66, 2000); // Play a 440 Hz sine tone for 2 seconds
-  playSineTone(329.63, 2000); // Play a 440 Hz sine tone for 2 seconds
-  playSineTone(349.23, 2000); // Play a 440 Hz sine tone for 2 seconds
-  playSineTone(392.00, 2000); // Play a 440 Hz sine tone for 2 seconds
-  playSineTone(440.00, 2000); // Play a 440 Hz sine tone for 2 seconds
-  playSineTone(493.88, 2000); // Play a 440 Hz sine tone for 2 seconds
-  playSineTone(523.25, 2000); // Play a 440 Hz sine tone for 2 seconds
+  Serial.println("Playing audio...");
+  showUTF8Status("Audio:", "播放中...");
+  
+  // 播放音频代码将在此处添加
+  // 目前只是占位符
+  
+  delay(1000);
+  showUTF8Status("Audio:", "播放完成");
 }

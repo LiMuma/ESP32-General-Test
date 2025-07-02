@@ -4,6 +4,23 @@
 // 外部引用显示对象
 extern U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2;
 
+// UTF-8编码的中文字符串常量
+const char* CHINESE_HELLO = "你好世界";
+const char* CHINESE_WIFI_CONNECTING = "WiFi连接中";
+const char* CHINESE_WIFI_CONNECTED = "WiFi已连接";
+const char* CHINESE_READY = "系统准备就绪";
+const char* CHINESE_ERROR = "系统错误";
+
+// UTF-8中文测试文本
+const char* utf8_test_texts[] = {
+  "你好世界",
+  "欢迎使用",
+  "系统启动",
+  "连接网络",
+  "运行正常",
+  "测试完成"
+};
+
 // 真正的中文显示函数（使用UTF-8字体）
 void showRealChineseMessage(const char* message) {
   u8g2.clearBuffer();
@@ -28,13 +45,6 @@ void showChineseStatus(const char* title, const char* status) {
   u8g2.sendBuffer();
 }
 
-// UTF-8编码的中文字符串常量
-const char* CHINESE_HELLO = "你好世界";
-const char* CHINESE_WIFI_CONNECTING = "WiFi连接中";
-const char* CHINESE_WIFI_CONNECTED = "WiFi已连接";
-const char* CHINESE_READY = "系统准备就绪";
-const char* CHINESE_ERROR = "系统错误";
-
 // 安全的中文显示函数（使用UTF-8字体）
 void showSafeChineseMessage(int messageId) {
   const char* message = "";
@@ -51,7 +61,7 @@ void showSafeChineseMessage(int messageId) {
   showRealChineseMessage(message);
 }
 
-// 新增：使用不同UTF-8字体的测试函数
+// 测试不同UTF-8字体
 void testUTF8Fonts() {
   const char* testText = "测试UTF8";
   
@@ -84,4 +94,46 @@ void testUTF8Fonts() {
   u8g2.print(testText);
   u8g2.sendBuffer();
   delay(2000);
+}
+
+// 测试常用中文字符
+void testCommonChineseChars() {
+  Serial.println("Testing common Chinese characters...");
+  
+  const char* commonChars[] = {
+    "一二三四五",
+    "上下左右中", 
+    "开关启停",
+    "连接断开",
+    "成功失败",
+    "正常错误"
+  };
+  
+  u8g2.setFont(u8g2_font_wqy12_t_chinese1);
+  
+  for (int i = 0; i < 6; i++) {
+    u8g2.clearBuffer();
+    u8g2.setCursor(2, 15);
+    u8g2.print(commonChars[i]);
+    u8g2.sendBuffer();
+    delay(1500);
+  }
+}
+
+// 显示UTF-8状态信息
+void showUTF8Status(const char* title, const char* message) {
+    return;
+  u8g2.clearBuffer();
+  
+  // 标题用英文，确保显示
+  u8g2.setFont(u8g2_font_ncenB08_tr);
+  u8g2.setCursor(2, 10);
+  u8g2.print(title);
+  
+  // 消息用UTF-8中文
+  u8g2.setFont(u8g2_font_wqy12_t_chinese1);
+  u8g2.setCursor(2, 28);
+  u8g2.print(message);
+  
+  u8g2.sendBuffer();
 } 
