@@ -7,16 +7,12 @@
 
 void showWifiStatus(const char* status);
 void showSafeChineseMessage(int messageId);
-void showUTF8ChineseMessage(const char* message);
-void showUTF8Status(const char* title, const char* message);
+void showStaticMessage(const char* message);
 
-// 测试公网连通性
-bool testInternetConnectivity() {
-  showUTF8Status("Test:", "测试公网连通性");
+bool testBaiduConnectivity() {
   
   HTTPClient http;
-  bool isConnected = false;
-  
+
   // 测试连接百度（中国大陆常用）
   Serial.println("Testing connectivity to Baidu...");
   http.begin("http://www.baidu.com");
@@ -27,35 +23,38 @@ bool testInternetConnectivity() {
   if (httpCode > 0) {
     Serial.printf("Baidu HTTP response: %d\n", httpCode);
     if (httpCode == 200 || httpCode == 302) {
-      isConnected = true;
-      showUTF8Status("Network:", "百度连接成功");
+      showStaticMessage("百度连接成功");
+      return true;
     }
   } else {
     Serial.printf("Baidu connection failed: %s\n", http.errorToString(httpCode).c_str());
   }
   http.end();
-  
-  // 如果百度失败，尝试连接谷歌DNS（备用测试）
-  if (!isConnected) {
-    Serial.println("Testing connectivity to Google DNS...");
+  return false;
+}
+
+bool testGoogleDNSConnectivity() {
+  Serial.println("Testing connectivity to Google DNS...");
+  HTTPClient http;
     http.begin("http://8.8.8.8");
     http.setTimeout(5000);
-    
+
     int httpCode2 = http.GET();
     if (httpCode2 > 0) {
-      Serial.printf("Google DNS HTTP response: %d\n", httpCode2);
-      if (httpCode2 >= 200 && httpCode2 < 400) {
-        isConnected = true;
-        showUTF8Status("Network:", "谷歌DNS连接成功");
-      }
+        Serial.printf("Google DNS HTTP response: %d\n", httpCode2);
+        if (httpCode2 >= 200 && httpCode2 < 400) {
+        showStaticMessage("谷歌DNS连接成功");
+        return true;
+        }
     } else {
-      Serial.printf("Google DNS connection failed: %s\n", http.errorToString(httpCode2).c_str());
+        Serial.printf("Google DNS connection failed: %s\n", http.errorToString(httpCode2).c_str());
     }
     http.end();
-  }
-  
-  // 最后尝试httpbin（国际测试服务）
-  if (!isConnected) {
+    return false;
+}
+
+bool testHttpbinConnectivity() {
+    HTTPClient http;
     Serial.println("Testing connectivity to httpbin...");
     http.begin("http://httpbin.org/get");
     http.setTimeout(5000);
@@ -64,29 +63,47 @@ bool testInternetConnectivity() {
     if (httpCode3 > 0) {
       Serial.printf("Httpbin HTTP response: %d\n", httpCode3);
       if (httpCode3 == 200) {
-        isConnected = true;
-        showUTF8Status("Network:", "Httpbin连接成功");
+        showStaticMessage("Httpbin连接成功");
+        return true;
       }
     } else {
       Serial.printf("Httpbin connection failed: %s\n", http.errorToString(httpCode3).c_str());
     }
     http.end();
+    return false;
+}
+
+// 测试公网连通性
+bool testInternetConnectivity() {
+  showStaticMessage("测试公网连通性");
+  
+  HTTPClient http;
+  bool isConnected = testBaiduConnectivity();
+  
+  // 如果百度失败，尝试连接谷歌DNS（备用测试）
+  if (!isConnected) {
+    isConnected = testGoogleDNSConnectivity();
+  }
+  
+  // 最后尝试httpbin（国际测试服务）
+  if (!isConnected) {
+    isConnected = testHttpbinConnectivity();
   }
   
   if (isConnected) {
     Serial.println("Internet connectivity: OK");
-    showUTF8Status("Network:", "公网连接正常");
+    showStaticMessage("公网连接正常");
     return true;
   } else {
     Serial.println("Internet connectivity: FAILED");
-    showUTF8Status("Error:", "公网连接失败");
+    showStaticMessage("公网连接失败");
     return false;
   }
 }
 
 // 测试阿里云API连通性
 bool testDashScopeConnectivity() {
-  showUTF8Status("Test:", "测试阿里云连通性");
+  showStaticMessage("测试阿里云连通性");
   
   HTTPClient http;
   http.begin("https://dashscope.aliyuncs.com");
@@ -101,12 +118,12 @@ bool testDashScopeConnectivity() {
     Serial.printf("DashScope connectivity test: %d\n", httpCode);
     // 404是正常的，说明域名可达但根路径不存在
     if (httpCode == 200 || httpCode == 404 || httpCode == 403) {
-      showUTF8Status("API:", "阿里云连接成功");
+      showStaticMessage("阿里云连接成功");
       Serial.println("DashScope domain is reachable (200/404/403 are all valid)");
       http.end();
       return true;
     } else if (httpCode >= 400 && httpCode < 500) {
-      showUTF8Status("API:", "阿里云域名可达");
+      showStaticMessage("阿里云域名可达");
       Serial.printf("DashScope domain reachable but got client error %d\n", httpCode);
       http.end();
       return true;
@@ -116,7 +133,7 @@ bool testDashScopeConnectivity() {
   }
   
   http.end();
-  showUTF8Status("Error:", "阿里云连接失败");
+  showStaticMessage("阿里云连接失败");
   return false;
 }
 
@@ -127,7 +144,7 @@ void initWifi() {
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   
   // 使用UTF-8中文显示WiFi连接状态
-  showUTF8ChineseMessage("WiFi连接中...");
+  showStaticMessage("WiFi连接中...");
   
   int attempts = 0;
   while (WiFi.status() != WL_CONNECTED && attempts < 20) {
@@ -138,7 +155,7 @@ void initWifi() {
          // 每5秒更新一次显示
      if (attempts % 5 == 0) {
        String statusMsg = "连接中..." + String(attempts) + "s";
-       showUTF8Status("WiFi:", statusMsg.c_str());
+       showStaticMessage(statusMsg.c_str());
      }
   }
   
@@ -149,12 +166,12 @@ void initWifi() {
     Serial.println(WiFi.localIP());
     
     // 使用UTF-8中文显示连接成功
-    showUTF8ChineseMessage("WiFi连接成功!");
+    showStaticMessage("WiFi连接成功!");
     delay(2000);
     
     // 显示IP地址
     String ipMessage = "IP:" + WiFi.localIP().toString();
-    showUTF8Status("Network:", ipMessage.c_str());
+    showStaticMessage(ipMessage.c_str());
     delay(2000);
     
     // 测试公网连通性
@@ -167,18 +184,18 @@ void initWifi() {
       delay(2000);
       
       if (apiOK) {
-        showUTF8Status("Ready:", "网络测试通过");
+        showStaticMessage("网络测试通过");
       } else {
-        showUTF8Status("Warning:", "API连接异常");
+        showStaticMessage("API连接异常");
       }
     } else {
-      showUTF8Status("Error:", "网络连接异常");
+      showStaticMessage("网络连接异常");
     }
     
   } else {
     Serial.println();
     Serial.println("WiFi Connection Failed!");
-    showUTF8Status("Error:", "WiFi连接失败");
+    showStaticMessage("WiFi连接失败");
   }
 }
 
@@ -193,10 +210,10 @@ void showNetworkStatus() {
     
     // 在屏幕上显示关键信息
     String statusMsg = "RSSI:" + String(WiFi.RSSI()) + "dBm";
-    showUTF8Status("WiFi:", statusMsg.c_str());
+    showStaticMessage(statusMsg.c_str());
   } else {
     Serial.println("WiFi未连接");
-    showUTF8Status("Error:", "WiFi未连接");
+    showStaticMessage("WiFi未连接");
   }
 }
 

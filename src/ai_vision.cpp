@@ -16,20 +16,20 @@ const char* DASHSCOPE_API_URL = "https://dashscope.aliyuncs.com/compatible-mode/
 const char* DASHSCOPE_API_KEY = "sk-deef87410c114822b24f54cc0ffeb406"; // ⚠️ 请替换为您的实际API密钥
 
 // 外部函数声明
-void showUTF8ChineseMessage(const char* message);
-void showUTF8Status(const char* title, const char* message);
+void showStaticMessage(const char* message);
+
 
 String resolveImage(const String& imageBase64, const String& question) {
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("WiFi未连接");
-    showUTF8Status("Error:", "WiFi未连接");
+    showStaticMessage("WiFi未连接");
     return "错误：WiFi未连接";
   }
 
   // 检查API密钥
   if (String(DASHSCOPE_API_KEY) == "YOUR_API_KEY_HERE") {
     Serial.println("请设置API密钥");
-    showUTF8Status("Error:", "API密钥未设置");
+    showStaticMessage("API密钥未设置");
     return "错误：API密钥未设置";
   }
 
@@ -37,7 +37,7 @@ String resolveImage(const String& imageBase64, const String& question) {
   Serial.printf("图像Base64大小: %d 字符\n", imageBase64.length());
   if (imageBase64.length() > 100000) { // 约75KB原始图像
     Serial.println("警告：图像可能过大");
-    showUTF8Status("Warning:", "图像较大");
+    showStaticMessage("图像较大");
   }
 
   HTTPClient http;
@@ -81,7 +81,7 @@ String resolveImage(const String& imageBase64, const String& question) {
   Serial.println("Authorization: Bearer " + String(DASHSCOPE_API_KEY).substring(0, 10) + "...");
   
   Serial.println("发送API请求...");
-  showUTF8Status("AI:", "分析图像中...");
+  showStaticMessage("分析图像中...");
   
   // 发送POST请求
   int httpResponseCode = http.POST(jsonString);
@@ -105,41 +105,41 @@ String resolveImage(const String& imageBase64, const String& question) {
       
       if (error) {
         Serial.println("JSON解析失败: " + String(error.c_str()));
-        showUTF8Status("Error:", "响应解析失败");
+        showStaticMessage("响应解析失败");
         return "错误：响应解析失败";
       }
       
       if (responseDoc.containsKey("choices") && responseDoc["choices"].size() > 0) {
         String result = responseDoc["choices"][0]["message"]["content"];
         Serial.println("AI分析结果: " + result);
-        showUTF8ChineseMessage(result.c_str());
+        showStaticMessage(result.c_str());
         return result;
       } else {
         Serial.println("响应格式错误，缺少choices字段");
-        showUTF8Status("Error:", "响应格式错误");
+        showStaticMessage("响应格式错误");
         return "错误：响应格式错误";
       }
     } else if (httpResponseCode == 400) {
       Serial.println("400错误 - 请求格式问题");
       Serial.println("可能原因：1.API密钥错误 2.图像格式问题 3.请求参数错误");
-      showUTF8Status("Error:", "请求格式错误");
+      showStaticMessage("请求格式错误");
       return "错误：请求格式错误(400)";
     } else if (httpResponseCode == 401) {
       Serial.println("401错误 - 认证失败，请检查API密钥");
-      showUTF8Status("Error:", "API密钥错误");
+      showStaticMessage("API密钥错误");
       return "错误：API密钥错误(401)";
     } else if (httpResponseCode == 429) {
       Serial.println("429错误 - 请求过于频繁");
-      showUTF8Status("Error:", "请求过于频繁");
+      showStaticMessage("请求过于频繁");
       return "错误：请求过于频繁(429)";
     } else {
       Serial.println("API请求失败: " + String(httpResponseCode));
-      showUTF8Status("Error:", "API请求失败");
+      showStaticMessage("API请求失败");
       return "错误：API请求失败(" + String(httpResponseCode) + ")";
     }
   } else {
     Serial.println("HTTP请求失败: " + http.errorToString(httpResponseCode));
-    showUTF8Status("Error:", "网络请求失败");
+    showStaticMessage("网络请求失败");
     return "错误：网络请求失败";
   }
   
@@ -194,7 +194,7 @@ String resolveImageFromURL(const String& imageUrl, const String& question) {
   serializeJson(doc, jsonString);
   
   Serial.println("发送API请求...");
-  showUTF8Status("AI:", "分析图像中...");
+  showStaticMessage("分析图像中...");
   
   int httpResponseCode = http.POST(jsonString);
   String response = "";
@@ -209,7 +209,7 @@ String resolveImageFromURL(const String& imageUrl, const String& question) {
       if (responseDoc.containsKey("choices") && responseDoc["choices"].size() > 0) {
         String result = responseDoc["choices"][0]["message"]["content"];
         Serial.println("AI分析结果: " + result);
-        showUTF8ChineseMessage(result.c_str());
+        showStaticMessage(result.c_str());
         return result;
       }
     }
@@ -223,13 +223,13 @@ String resolveImageFromURL(const String& imageUrl, const String& question) {
 bool testAPIConnection() {
   if (WiFi.status() != WL_CONNECTED) {
     Serial.println("WiFi未连接");
-    showUTF8Status("Error:", "WiFi未连接");
+    showStaticMessage("WiFi未连接");
     return false;
   }
 
   if (String(DASHSCOPE_API_KEY) == "YOUR_API_KEY_HERE") {
     Serial.println("请设置API密钥");
-    showUTF8Status("Error:", "API密钥未设置");
+    showStaticMessage("API密钥未设置");
     return false;
   }
 
@@ -254,7 +254,7 @@ bool testAPIConnection() {
   serializeJson(doc, jsonString);
   
   Serial.println("测试API连接...");
-  showUTF8Status("Test:", "测试API连接");
+  showStaticMessage("测试API连接");
   
   int httpResponseCode = http.POST(jsonString);
   
@@ -264,17 +264,17 @@ bool testAPIConnection() {
     
     if (httpResponseCode == 200) {
       Serial.println("API连接测试成功");
-      showUTF8Status("API:", "连接测试成功");
+      showStaticMessage("连接测试成功");
       http.end();
       return true;
     } else {
       Serial.printf("API测试失败: %d\n", httpResponseCode);
       Serial.println("响应: " + response);
-      showUTF8Status("Error:", "API测试失败");
+      showStaticMessage("API测试失败");
     }
   } else {
     Serial.println("HTTP请求失败");
-    showUTF8Status("Error:", "网络请求失败");
+    showStaticMessage("网络请求失败");
   }
   
   http.end();

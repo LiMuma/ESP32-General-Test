@@ -238,6 +238,5 @@
  /Users/mujiang/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32s3/include/mbedtls/port/include/aes/esp_aes.h \
  /Users/mujiang/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32s3/include/hal/include/hal/aes_types.h \
  /Users/mujiang/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32s3/include/mbedtls/mbedtls/include/mbedtls/error.h \
- .pio/libdeps/esp32-s3-devkitm-1/ArduinoJson/src/ArduinoJson.h \
- .pio/libdeps/esp32-s3-devkitm-1/ArduinoJson/src/ArduinoJson.hpp \
- .pio/libdeps/esp32-s3-devkitm-1/ArduinoJson/src/ArduinoJson/Configuration.hpp
+ lib/ArduinoJson/src/ArduinoJson.h lib/ArduinoJson/src/ArduinoJson.hpp \
+ lib/ArduinoJson/src/ArduinoJson/Configuration.hpp

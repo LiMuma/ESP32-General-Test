@@ -179,9 +179,7 @@
  /Users/mujiang/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h \
  /Users/mujiang/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src/Wire.h \
  /Users/mujiang/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal.h \
- .pio/libdeps/esp32-s3-devkitm-1/U8g2/src/U8g2lib.h \
+ lib/U8g2/src/U8g2lib.h \
  /Users/mujiang/.platformio/packages/framework-arduinoespressif32/cores/esp32/Print.h \
- .pio/libdeps/esp32-s3-devkitm-1/U8g2/src/U8x8lib.h \
- .pio/libdeps/esp32-s3-devkitm-1/U8g2/src/clib/u8x8.h \
- .pio/libdeps/esp32-s3-devkitm-1/U8g2/src/clib/u8g2.h \
- .pio/libdeps/esp32-s3-devkitm-1/U8g2/src/clib/u8x8.h
+ lib/U8g2/src/U8x8lib.h lib/U8g2/src/clib/u8x8.h lib/U8g2/src/clib/u8g2.h \
+ lib/U8g2/src/clib/u8x8.h

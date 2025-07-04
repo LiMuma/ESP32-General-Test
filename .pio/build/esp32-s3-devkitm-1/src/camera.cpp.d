@@ -185,4 +185,7 @@
  /Users/mujiang/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32s3/include/esp32-camera/driver/include/sensor.h \
  /Users/mujiang/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32s3/include/esp32-camera/conversions/include/img_converters.h \
  /Users/mujiang/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32s3/include/esp32-camera/conversions/include/esp_jpg_decode.h \
- include/camera_pins.h
+ lib/U8g2/src/U8g2lib.h \
+ /Users/mujiang/.platformio/packages/framework-arduinoespressif32/cores/esp32/Print.h \
+ lib/U8g2/src/U8x8lib.h lib/U8g2/src/clib/u8x8.h lib/U8g2/src/clib/u8g2.h \
+ lib/U8g2/src/clib/u8x8.h include/camera_pins.h

@@ -3,13 +3,16 @@
 
 // 基本显示函数
 void initScreen();
-void showUTF8ChineseMessage(const char* message);
-void showUTF8Status(const char* title, const char* message);
+void showStaticMessage(const char* message);
+void showTwoLineMessage(const char* line1, const char* line2);
+
 
 // 摄像头功能
 void initCamera();
 void captureImage();
 String captureAndAnalyze(const String& question);
+void captureAndDisplayOnOled();  // 新增：拍照并显示到OLED
+void continuousCaptureDisplay(); // 新增：连续拍照显示功能
 
 // AI视觉分析功能
 String resolveImage(const String& imageBase64, const String& question);
@@ -21,6 +24,9 @@ void initWifi();
 bool testInternetConnectivity();
 bool testDashScopeConnectivity();
 void showNetworkStatus();
+
+void testImageResolution();
+void testImageDisplayFeatures(); // 新增：图像显示功能测试
 
 void setup() {
     Serial.begin(115200);
@@ -40,53 +46,87 @@ void setup() {
     
     // 测试API连接
     if (testAPIConnection()) {
-        showUTF8Status("Ready:", "API连接正常");
+        showStaticMessage("API连接正常");
     } else {
-        showUTF8Status("Warning:", "API连接异常");
+        showStaticMessage("API连接异常");
     }
     delay(2000);
     
+    showStaticMessage("初始化摄像头");
     // 初始化摄像头
     initCamera();
     delay(2000);
     
-    showUTF8Status("System:", "初始化完成");
+    showStaticMessage("摄像头初始化完成");
     Serial.println("System initialization complete!");
 }
 
 void loop() {
+    // 主菜单循环
+    showStaticMessage("AI视觉系统");
+    delay(2000);
+    
+    showStaticMessage("准备就绪");
+    delay(2000);
+    
+    // 测试图像显示功能
+    testImageDisplayFeatures();
+    
+    // 长暂停，避免快速循环
+    delay(5000);
+}
+
+// 新增：图像显示功能综合测试
+void testImageDisplayFeatures() {
+    Serial.println("=== Image Display Features Test ===");
+    
+    // 测试1：单张图像显示
+    showTwoLineMessage("测试1:", "单张图像显示");
+    delay(2000);
+    captureAndDisplayOnOled();
+    delay(2000);
+    
+    // 测试2：连续拍照显示
+    showTwoLineMessage("测试2:", "连续拍照显示");
+    delay(2000);
+    continuousCaptureDisplay();
+    delay(2000);
+    
+    // 测试3：再次单张显示（验证稳定性）
+    showTwoLineMessage("测试3:", "稳定性测试");
+    delay(2000);
+    captureAndDisplayOnOled();
+    delay(2000);
+    
+    showTwoLineMessage("所有测试完成", "系统正常");
+    delay(3000);
+    
+    Serial.println("=== Image Display Test Complete ===");
+}
+
+void resolveImage(String image) {
+    Serial.println("Resolving image...");
+    Serial.println(image);
+}
+
+void testImageResolution() {
     Serial.println("=== AI Vision Demo ===");
-    
-    // 检查网络状态
-    if (WiFi.status() != WL_CONNECTED) {
-        showUTF8Status("Error:", "WiFi未连接");
-        delay(5000);
-        return;
-    }
-    
-    // 先测试API连接
-    if (!testAPIConnection()) {
-        showUTF8Status("Error:", "API连接失败");
-        delay(10000);
-        return;
-    }
-    
-    // 测试拍照并分析（需要API密钥）
-    showUTF8Status("AI:", "图像分析测试");
+  // 测试拍照并分析（需要API密钥）
+    showStaticMessage("图像分析测试");
     String analysisResult = captureAndAnalyze("图中描绘的是什么景象？请用中文简短回答。");
     
     if (analysisResult.length() > 0 && !analysisResult.startsWith("错误")) {
         Serial.println("分析结果: " + analysisResult);
-        // 结果会在showUTF8ChineseMessage中显示
+        // 结果会在showStaticMessage中显示
     } else {
         Serial.println("分析失败: " + analysisResult);
-        showUTF8Status("Error:", "AI分析失败");
+        showStaticMessage("AI分析失败");
     }
     
     delay(5000);
     
     // 测试使用网络图片分析（演示用）
-    showUTF8Status("AI:", "网络图片分析");
+    showStaticMessage("网络图片分析");
     String urlResult = resolveImageFromURL(
         "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241022/emyrja/dog_and_girl.jpeg", 
         "图中描绘的是什么景象？请用中文简短回答。"
@@ -96,16 +136,9 @@ void loop() {
         Serial.println("网络图片分析结果: " + urlResult);
     } else {
         Serial.println("网络图片分析失败: " + urlResult);
-        showUTF8Status("Error:", "网络分析失败");
+        showStaticMessage("网络分析失败");
     }
     
-    delay(10000);
-    
     Serial.println("=== Demo Cycle Complete ===");
-    delay(3000);
-}
-
-void resolveImage(String image) {
-    Serial.println("Resolving image...");
-    Serial.println(image);
-}
+    delay(10000);
+  }

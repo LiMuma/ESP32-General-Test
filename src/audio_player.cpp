@@ -7,7 +7,7 @@
 #define I2S_BCK 13
 #define I2S_LRC 12
 
-void showUTF8Status(const char* title, const char* message);
+void showStaticMessage(const char* message);
 
 void playSineTone(float frequency, int duration_ms) {
   const int amplitude = 3000;
@@ -26,7 +26,7 @@ void playSineTone(float frequency, int duration_ms) {
 
 void initAudio() {
   Serial.println("Audio module initialization...");
-  showUTF8Status("Audio:", "初始化中...");
+  showStaticMessage("初始化中...");
   
   const i2s_config_t i2s_config = {
     .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_TX),
@@ -54,16 +54,16 @@ void initAudio() {
   playSineTone(440.0, 2000); // Play a 440 Hz sine tone for 2 seconds
   
   Serial.println("Audio module initialized (placeholder)");
-  showUTF8Status("Audio:", "初始化完成");
+  showStaticMessage("初始化完成");
 }
 
 void playAudio() {
   Serial.println("Playing audio...");
-  showUTF8Status("Audio:", "播放中...");
+  showStaticMessage("播放中...");
   
   // 播放音频代码将在此处添加
   // 目前只是占位符
   
   delay(1000);
-  showUTF8Status("Audio:", "播放完成");
+  showStaticMessage("播放完成");
 }
