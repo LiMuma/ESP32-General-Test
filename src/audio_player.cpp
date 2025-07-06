@@ -3,9 +3,9 @@
 #include <math.h> 
 
 #define I2S_SAMPLE_RATE 44100 // Sample rate in Hz
-#define I2S_DOUT 21
-#define I2S_BCK 47
-#define I2S_LRC 45
+#define I2S_DOUT 7
+#define I2S_BCK 15
+#define I2S_LRC 16
 
 // 外部函数声明
 void showStaticMessage(const char* message);
