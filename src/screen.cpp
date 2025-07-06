@@ -9,8 +9,8 @@
 #define SCREEN_ADDRESS 0x3C // I2C地址，通常是0x3C或0x3D
 
 // 定义I2C引脚
-#define SDA_PIN 7
-#define SCL_PIN 6
+#define SDA_PIN 36
+#define SCL_PIN 35
 
 // 创建U8g2显示对象 - 使用SSD1306 128x32 I2C显示屏（全局访问）
 U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE, /* clock=*/ SCL_PIN, /* data=*/ SDA_PIN);
