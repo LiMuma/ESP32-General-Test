@@ -4,9 +4,9 @@
 #include <freertos/task.h>
 
 // I2S麦克风引脚定义
-#define I2S_MIC_SCK_PIN     18  // SCK (Serial Clock)
-#define I2S_MIC_WS_PIN      42   // WS (Word Select/LRC)
-#define I2S_MIC_SD_PIN      17  // SD (Serial Data)
+#define I2S_MIC_SCK_PIN     46  // SCK (Serial Clock)
+#define I2S_MIC_WS_PIN      13   // WS (Word Select/LRC)
+#define I2S_MIC_SD_PIN      5  // SD (Serial Data)
 
 // I2S配置参数
 #define I2S_SAMPLE_RATE     44100  // 采样率 44.1kHz (与播放器统一)
