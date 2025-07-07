@@ -2,8 +2,8 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-#define WIFI_SSID "Yungu HS CS Lab"
-#define WIFI_PASSWORD "mujianglaoshi"
+#define WIFI_SSID "H3C_D4EBAB"
+#define WIFI_PASSWORD "abcd1234"
 
 void showWifiStatus(const char* status);
 void showSafeChineseMessage(int messageId);
